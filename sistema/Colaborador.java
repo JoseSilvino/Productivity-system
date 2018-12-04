@@ -19,43 +19,51 @@ public class Colaborador {
       type 3 : mastering student
       type 4 : PhD studend
       type 5 : researchers */
-    private ArrayList<String> projects;
+    private ArrayList<Projetos> projects;
     private ArrayList <Publicação> publications;
     private ArrayList<Orientação> orientations;
+    public void addProject(Projetos project) {
+        this.projects.add(project);
+    }
+    public Projetos getProject(int index) {
+        return projects.get(index);
+    }
+    public ArrayList<Projetos> getProjects() {
+        return projects;
+    }        
     public void addPublication(Publicação nova) {
         this.publications.add(nova);
     }
     public Publicação getPublication(int index) {
         return publications.get(index);
     }
-    public void orderProjects(ArrayList<Projetos> projects) {
-        
-    }
-    public int separe (int start,int end) {
+    public int separe_pub (int start,int end) {
         GregorianCalendar gc = this.publications.get(start).getDay();
         int pivot = gc.get(GregorianCalendar.YEAR);
         int i = start, f = end;
         while(i<=f) {
-            if(this.publications.get(i).getDay().get(GregorianCalendar.YEAR) <= pivot) {
+            if(this.publications.get(i).getDay().get(GregorianCalendar.YEAR) >= pivot) {
                 i++;
             }
-            else if (pivot < this.publications.get(f).getDay().get(GregorianCalendar.YEAR)) {
+            else if (pivot > this.publications.get(f).getDay().get(GregorianCalendar.YEAR)) {
                 f--;
             }
             else {
                 Publicação aux =  this.publications.get(i);
-                publications.set(i,publications.get(f));
-                publications.set(f,aux);
+                this.publications.set(i,publications.get(f));
+                this.publications.set(f,aux);
                 i++;
                 f--;
             }
                 
         }
+        this.publications.set(start,publications.get(f));
+        this.publications.set(f,this.publications.get(start));
         return f;
     }
     public void orderPublications(int start,int end) {
         if(start<end) {
-            int pos = this.separe(start,end);
+            int pos = this.separe_pub(start,end);
             orderPublications(start,pos-1);
             orderPublications(pos+1,end);
         }
@@ -114,5 +122,89 @@ public class Colaborador {
             System.out.println("Error , number missing");
         }
     }
-
+    public void PrintC() {
+        System.out.println("Name : "+ this.name);
+        int t = this.projects.size();
+        Projetos[] one,two,three;
+        one = new Projetos[t];
+        two = new Projetos[t];
+        three = new Projetos[t];
+        int first,second,third;
+        first = second = third = 0;
+        for(int i = 0 ; i < t ; i ++) {
+            switch (this.projects.get(i).getState()) {
+                case 1:
+                    one[first] = this.projects.get(i);
+                    first ++;
+                    break;
+                case 2:
+                    two[second] = this.projects.get(i);
+                    second++;
+                    break;
+                case 3:
+                    three[third] = this.projects.get(i);
+                    third ++ ;
+                    break;
+                default:
+                    break;
+            }
+        }
+        System.out.println("In elaboration projects :");
+        for(int i = 0 ; i < first ; i++) {
+            System.out.println(one[i].getName());
+        }
+        System.out.println("In progress projects :");
+        for(int i = 0 ; i < second ; i ++) {
+            System.out.println(two[i].getName());
+        }
+        this.quicksort(three,0,third-1);
+        System.out.println("Complete projects");
+        for(int i = 0 ; i < third;i++) {
+            System.out.println(three[i].getName());
+        }
+        System.out.println("Publications");
+        int p = this.publications.size();
+        this.orderPublications(0,p-1);
+        for(int i = 0 ; i < p ; i ++) {
+            System.out.println(this.publications.get(i).getTitle());
+        }
+        if(this.type == 1) {
+            System.out.println("Orientations");
+            int o = this.orientations.size();
+            for(int i = 0 ; i < o ; i ++) {
+                System.out.println(this.orientations.get(i).getOrientated());
+            }
+        }
+    }
+    public void quicksort(Projetos [] projects,int start,int end) {
+        if(start<end) {
+            int pos = this.partition(projects,start,end);
+            quicksort(projects,start,pos-1);
+            quicksort(projects,pos+1,end);   
+        }
+    }
+    public int partition(Projetos [] projects,int start,int end) {
+            GregorianCalendar gc = projects[start].getEnd();
+        int pivot = gc.get(GregorianCalendar.YEAR);
+        int i = start, f = end;
+        while(i<=f) {
+            if(projects[i].getEnd().get(GregorianCalendar.YEAR) >= pivot) {
+                i++;
+            }
+            else if (pivot > projects[f].getEnd().get(GregorianCalendar.YEAR)) {
+                f--;
+            }
+            else {
+                Projetos aux =  projects[i];
+                projects[i] = projects[f];
+                projects[f] = aux;
+                i++;
+                f--;
+            }
+                
+        }
+        this.publications.set(start,publications.get(f));
+        this.publications.set(f,this.publications.get(start));
+        return f;
+    }
 }

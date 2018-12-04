@@ -57,7 +57,9 @@ public class Laboratório {
                 switch (dec) {
                     case 1:
                         if(this.projects.get(index).getState() == 1) {
-                            this.projects.get(index).setMember(this.collaborators.get(SearchCollab(input.nextLine())));
+                            int collab = SearchCollab(input.nextLine());
+                            this.projects.get(index).setMember(this.collaborators.get(collab));
+                            this.collaborators.get(collab).addProject(this.projects.get(index));
                         }   break;
                     case 2:
                         if(!haveMemberInBoth(index)&&this.projects.get(index).getState()==1) {
@@ -118,7 +120,9 @@ public class Laboratório {
               addCollab(new Colaborador(input));
           }
           else if(dec ==  2) {
-              addProject(new Projetos(input,this.collaborators));
+              Projetos new_project = new Projetos(input,this.collaborators);
+              addProject(new_project);
+              new_project.addAllCollabs();
           }
           else if(dec == 3) {
               addPub(new Publicação(input,"0"));
@@ -145,7 +149,10 @@ public class Laboratório {
               int new_dec = input.nextInt();
               input.nextLine();
               if(new_dec == 1) {
-                  
+                  System.out.println("Type the collaborator's name");
+                  String collaborator = input.nextLine();
+                  int collaborator_index = SearchCollab(collaborator);
+                  this.collaborators.get(collaborator_index).PrintC();
               }
               if(new_dec == 2) {
                   System.out.println("Type the project's name");

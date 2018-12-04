@@ -13,9 +13,9 @@ public class Projetos {
         private String name;
 	private int state;
         /*
-        1 = In elaboration
-        2 = in progress
-        3 = Finished
+        *1 = In elaboration
+        *2 = in progress
+        *3 = Finished
         */
 	private ArrayList <Colaborador> members;
         private ArrayList <Publicação> publications;
@@ -96,23 +96,27 @@ public class Projetos {
             }
             return null;
         }
-	public Projetos(Scanner input,ArrayList collabs) {
+        public void addAllCollabs() {
+            int t = this.members.size();
+                for(int i = 0 ;i < t; i ++) {
+                    this.members.get(i).addProject(this);
+                }
+        }
+	public Projetos(Scanner input,ArrayList<Colaborador> collabs) {
                 System.out.println("Type the project's name");
                 this.name = input.nextLine();
                 System.out.println("Type how many collaborators the project will have");
                 int t = input.nextInt();
                 input.nextLine();
                 this.members = new ArrayList<>();
-                
+                boolean can = false;
                 for(int i = 0 ;i < t ;i++) {
                     System.out.println("Type the "+(t-i)+" other members");
                     this.members.add(SearchCollabs(input.nextLine(),collabs));
-                }
-                boolean can = false ;
-                for(int i = 0 ;i < t; i ++) {
-                    if(this.getMember(i).getType() ==  1) {
+                    if(collabs.get(this.members.size()-1).getType() == 1 ) {
                         can = true;
                     }
+                        
                 }
                 if(can) {
                     this.state = 1;
@@ -136,29 +140,31 @@ public class Projetos {
                     System.out.println("you can't  create this project , because you don't have a professor");
                 }
     }
-            public int separe (int start,int end) {
+        public int separe (int start,int end) {
         GregorianCalendar gc = this.publications.get(start).getDay();
         int pivot = gc.get(GregorianCalendar.YEAR);
         int i = start, f = end;
         while(i<=f) {
-            if(this.publications.get(i).getDay().get(GregorianCalendar.YEAR) <= pivot) {
+            if(this.publications.get(i).getDay().get(GregorianCalendar.YEAR) >= pivot) {
                 i++;
             }
-            else if (pivot < this.publications.get(f).getDay().get(GregorianCalendar.YEAR)) {
+            else if (pivot > this.publications.get(f).getDay().get(GregorianCalendar.YEAR)) {
                 f--;
             }
             else {
                 Publicação aux =  this.publications.get(i);
-                publications.set(i,publications.get(f));
-                publications.set(f,aux);
+                this.publications.set(i,publications.get(f));
+                this.publications.set(f,aux);
                 i++;
                 f--;
             }
                 
         }
+        this.publications.set(start,publications.get(f));
+        this.publications.set(f,this.publications.get(start));
         return f;
     }
-    public void orderPublications(int start,int end) {
+        public void orderPublications(int start,int end) {
         if(start<end) {
             int pos = this.separe(start,end);
             orderPublications(start,pos-1);
