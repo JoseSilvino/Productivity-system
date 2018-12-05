@@ -64,12 +64,11 @@ public class Laboratório {
                     case 2:
                         if(!haveMemberInBoth(index)&&this.projects.get(index).getState()==1) {
                             this.projects.get(index).changeState(2);
-                            this.projects.get(index).setStart();
                         }
                         else if(this.projects.get(index).getState()==2) {
                             if(this.projects.get(index).getPubSize()!=0) {
                                 this.projects.get(index).changeState(3);
-                                this.projects.get(index).setEnd();
+                                this.projects.get(index).setEnd(this.today);
                             }
                         }
                         break;
@@ -121,11 +120,14 @@ public class Laboratório {
           }
           else if(dec ==  2) {
               Projetos new_project = new Projetos(input,this.collaborators);
+              new_project.setStart(this.today);
               addProject(new_project);
               new_project.addAllCollabs();
           }
           else if(dec == 3) {
-              addPub(new Publicação(input,"0"));
+            Publicação pub = new Publicação(input,"0");
+            pub.setDay(this.today);
+              addPub(pub);
           }
           else if(dec == 4) {
               this.orientations.add(new Orientação(input));

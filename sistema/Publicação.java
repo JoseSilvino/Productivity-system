@@ -39,8 +39,8 @@ public class Publicação {
     public String getAssociated() {
         return associated_project;
     }
-    public void setDay() {
-        this.publication = new GregorianCalendar();
+    public void setDay(GregorianCalendar today) {
+        this.publication = today;
     }
     public GregorianCalendar getDay() {
         return publication;
@@ -57,7 +57,6 @@ public class Publicação {
             System.out.println(t-i+" missing");
             addAuthor(input.nextLine()); 
         }
-        setDay();
         System.out.println("Type the conference this project was publicated");
         setConference(input.nextLine());
         if(related.equals("0")) {

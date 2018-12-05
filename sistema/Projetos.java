@@ -34,11 +34,11 @@ public class Projetos {
         public int getMemberSize() {
             return members.size();
         }
-        public void setStart() {
-            this.start = new GregorianCalendar();
+        public void setStart(GregorianCalendar today) {
+            this.start = today;
         }
-        public void setEnd() {
-            this.end = new GregorianCalendar();
+        public void setEnd(GregorianCalendar today) {
+            this.end = today;
         }
         public GregorianCalendar getEnd() {
             return end;
